@@ -2,13 +2,12 @@
 
 	<PropertyGroup>
 		<TargetFramework Condition="'$(LibraryFrameworks)'==''">netstandard2.0</TargetFramework>
-		<Version>1.7.0</Version>
-		<Authors>Cem Pehlivan</Authors>
-		<Company>Cem Pehlivan</Company>
+		<Version>1.0.0</Version>
+		<Authors>furkandeveloper</Authors>
+		<Company>furkandeveloper</Company>
 		<Description>Sanal POS</Description>
-		<Copyright>Copyright © Cem Pehlivan 2021-2023</Copyright>
-		<PackageProjectUrl>https://github.com/cempehlivan/CP.VPOS</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/cempehlivan/CP.VPOS</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/furkandeveloper/CP.VPOS</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/furkandeveloper/CP.VPOS</RepositoryUrl>
 		<AssemblyVersion>1.7.0</AssemblyVersion>
 		<FileVersion>1.7.0</FileVersion>
 		<PackageIcon>packageIcon.png</PackageIcon>
@@ -16,8 +15,8 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>sanalpos sanal-pos</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageId>CP.VPOS</PackageId>
-		<Product>CP.VPOS</Product>
+		<PackageId>furkandeveloper.CP.VPOS</PackageId>
+		<Product>furkandeveloper.CP.VPOS</Product>
 		<RepositoryType>git</RepositoryType>
 		<NoWarn>$(NoWarn);CS8981;NETSDK1138</NoWarn>
 	</PropertyGroup>
