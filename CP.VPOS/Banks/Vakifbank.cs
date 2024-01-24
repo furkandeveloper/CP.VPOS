@@ -236,6 +236,7 @@ namespace CP.VPOS.Banks.Vakifbank
                     { "OrderId", response.orderNumber },
                     { "ClientIp", "1.1.1.1" },
                     { "TransactionDeviceSource", 0 },
+                    { "MerchantType", "1" }
                 };
 
 
@@ -326,9 +327,12 @@ namespace CP.VPOS.Banks.Vakifbank
         {
             string responseString = "";
 
-            ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
+            //ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
+            System.Net.ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             System.Net.ServicePointManager.Expect100Continue = false;
+            ServicePointManager.MaxServicePointIdleTime = 15;
 
             using (HttpClient client = new HttpClient())
             {
