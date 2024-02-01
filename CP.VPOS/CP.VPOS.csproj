@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework Condition="'$(LibraryFrameworks)'==''">netstandard2.0</TargetFramework>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>furkandeveloper</Authors>
 		<Company>furkandeveloper</Company>
 		<Description>Sanal POS</Description>
