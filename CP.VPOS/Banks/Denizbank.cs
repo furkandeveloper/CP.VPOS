@@ -102,7 +102,15 @@ namespace CP.VPOS.Banks.Denizbank
                 {"Expiry", request.saleInfo.cardExpiryDateMonth.ToString("00") + request.saleInfo.cardExpiryDateYear.ToString().Substring(2)},
             };
 
-            string hashText = SHA1Base64(req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] + req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantStorekey);
+            var str = req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] +
+                      req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword;
+
+            // SHA1 sha = new SHA1CryptoServiceProvider();
+            // var bytes = System.Text.Encoding.GetEncoding("ISO-8859-9").GetBytes(str);
+            // var hashingBytes = sha.ComputeHash(bytes);
+            // string hash = Convert.ToBase64String(hashingBytes);
+            
+            string hashText = SHA1Base64(req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] + req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword);
 
             req.Add("Hash", hashText);
 
