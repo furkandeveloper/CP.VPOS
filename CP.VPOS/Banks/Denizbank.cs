@@ -105,14 +105,14 @@ namespace CP.VPOS.Banks.Denizbank
             var str = req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] +
                       req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword;
 
-            // SHA1 sha = new SHA1CryptoServiceProvider();
-            // var bytes = System.Text.Encoding.GetEncoding("ISO-8859-9").GetBytes(str);
-            // var hashingBytes = sha.ComputeHash(bytes);
-            // string hash = Convert.ToBase64String(hashingBytes);
+            SHA1 sha = new SHA1CryptoServiceProvider();
+            var bytes = System.Text.Encoding.GetEncoding("ISO-8859-9").GetBytes(str);
+            var hashingBytes = sha.ComputeHash(bytes);
+            string hash = Convert.ToBase64String(hashingBytes);
             
-            string hashText = SHA1Base64(req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] + req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword);
+            //string hashText = SHA1Base64(req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] + req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword);
 
-            req.Add("Hash", hashText);
+            req.Add("Hash", hash);
 
             string res = this.Request(req, auth);
 
