@@ -26,20 +26,33 @@ namespace CP.VPOS.Banks.Denizbank
             SaleResponse response = new SaleResponse();
             response.orderNumber = request.orderNumber;
 
-            Dictionary<string, string> req = new Dictionary<string, string> {
-                {"ShopCode", auth.merchantID },
-                {"UserCode", auth.merchantUser },
-                {"UserPass", auth.merchantPassword },
-                {"PurchAmount", request.saleInfo.amount.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")).Replace(".", "").Replace(",", ".") },
-                {"Currency", ((int)request.saleInfo.currency).ToString() },
-                {"OrderId", request.orderNumber },
-                {"TxnType", "Auth" },
-                {"InstallmentCount", (request.saleInfo.installment > 1 ? request.saleInfo.installment.ToString() : "0") },
-                {"SecureType", "NonSecure" },
-                {"Pan", request.saleInfo.cardNumber},
-                {"Cvv2",request.saleInfo.cardCVV},
-                {"Expiry", request.saleInfo.cardExpiryDateMonth.ToString("00") + request.saleInfo.cardExpiryDateYear.ToString().Substring(2)},
-                {"Lang", "TR"},
+            Dictionary<string, string> req = new Dictionary<string, string>
+            {
+                { "ShopCode", auth.merchantID },
+                { "UserCode", auth.merchantUser },
+                { "UserPass", auth.merchantPassword },
+                {
+                    "PurchAmount",
+                    request.saleInfo.amount.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")).Replace(".", "")
+                        .Replace(",", ".")
+                },
+                { "Currency", ((int)request.saleInfo.currency).ToString() },
+                { "OrderId", request.orderNumber },
+                { "TxnType", "Auth" },
+                {
+                    "InstallmentCount",
+                    (request.saleInfo.installment > 1 ? request.saleInfo.installment.ToString() : "0")
+                },
+                { "SecureType", "NonSecure" },
+                { "Pan", request.saleInfo.cardNumber },
+                { "Cvv2", request.saleInfo.cardCVV },
+                {
+                    "Expiry",
+                    request.saleInfo.cardExpiryDateMonth.ToString("00") +
+                    request.saleInfo.cardExpiryDateYear.ToString().Substring(2)
+                },
+                { "Lang", "TR" },
+                {"Version3D","2.0"}
             };
 
             string res = this.Request(req, auth);
@@ -86,33 +99,48 @@ namespace CP.VPOS.Banks.Denizbank
             SaleResponse response = new SaleResponse();
             response.orderNumber = request.orderNumber;
 
-            Dictionary<string, string> req = new Dictionary<string, string> {
-                {"ShopCode", auth.merchantID },
-                {"PurchAmount", request.saleInfo.amount.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")).Replace(".", "").Replace(",", ".") },
-                {"Currency", ((int)request.saleInfo.currency).ToString() },
-                {"OrderId", request.orderNumber },
-                {"OkUrl", request.payment3D.returnURL },
-                {"FailUrl", request.payment3D.returnURL },
-                {"Rnd", Guid.NewGuid().ToString().Replace("-", "")},
-                {"TxnType", "Auth" },
-                {"InstallmentCount", (request.saleInfo.installment > 1 ? request.saleInfo.installment.ToString() : "0") },
-                {"SecureType", "3DPay" },
-                {"Pan", request.saleInfo.cardNumber},
-                {"Cvv2",request.saleInfo.cardCVV},
-                {"Expiry", request.saleInfo.cardExpiryDateMonth.ToString("00") + request.saleInfo.cardExpiryDateYear.ToString().Substring(2)},
+            Dictionary<string, string> req = new Dictionary<string, string>
+            {
+                { "ShopCode", auth.merchantID },
+                {
+                    "PurchAmount",
+                    request.saleInfo.amount.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")).Replace(".", "")
+                        .Replace(",", ".")
+                },
+                { "Currency", ((int)request.saleInfo.currency).ToString() },
+                { "OrderId", request.orderNumber },
+                { "OkUrl", request.payment3D.returnURL },
+                { "FailUrl", request.payment3D.returnURL },
+                { "Rnd", Guid.NewGuid().ToString().Replace("-", "") },
+                { "TxnType", "Auth" },
+                {
+                    "InstallmentCount",
+                    (request.saleInfo.installment > 1 ? request.saleInfo.installment.ToString() : "0")
+                },
+                { "SecureType", "3DPay" },
+                { "Pan", request.saleInfo.cardNumber },
+                { "Cvv2", request.saleInfo.cardCVV },
+                {"Version3D", "2.0"},
+                {
+                    "Expiry",
+                    request.saleInfo.cardExpiryDateMonth.ToString("00") +
+                    request.saleInfo.cardExpiryDateYear.ToString().Substring(2)
+                },
             };
 
-            var str = req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] +
-                      req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword;
+            // var str = req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] +
+            //           req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword;
+            //
+            // SHA1 sha = new SHA1CryptoServiceProvider();
+            // var bytes = System.Text.Encoding.GetEncoding("ISO-8859-9").GetBytes(str);
+            // var hashingBytes = sha.ComputeHash(bytes);
+            // string hash = Convert.ToBase64String(hashingBytes);
 
-            SHA1 sha = new SHA1CryptoServiceProvider();
-            var bytes = System.Text.Encoding.GetEncoding("ISO-8859-9").GetBytes(str);
-            var hashingBytes = sha.ComputeHash(bytes);
-            string hash = Convert.ToBase64String(hashingBytes);
-            
-            //string hashText = SHA1Base64(req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] + req["FailUrl"] + req["TxnType"] + req["InstallmentCount"] + req["Rnd"] + auth.merchantPassword);
+            string hashText = SHA1Base64(req["ShopCode"] + req["OrderId"] + req["PurchAmount"] + req["OkUrl"] +
+                                         req["FailUrl"] + req["TxnType"] + req["InstallmentCount"] + req["Rnd"] +
+                                         auth.merchantPassword);
 
-            req.Add("Hash", hash);
+            req.Add("Hash", hashText);
 
             string res = this.Request(req, auth);
 
@@ -122,7 +150,8 @@ namespace CP.VPOS.Banks.Denizbank
 
             if (dic?.ContainsKey("ErrorMessage") == true || dic?.ContainsKey("ErrorCode") == true)
             {
-                string errorMsg = $"{(dic?.ContainsKey("ErrorCode") == true ? dic["ErrorCode"].cpToString() : "")} - {(dic?.ContainsKey("ErrorMessage") == true ? dic["ErrorMessage"].cpToString() : "")}";
+                string errorMsg =
+                    $"{(dic?.ContainsKey("ErrorCode") == true ? dic["ErrorCode"].cpToString() : "")} - {(dic?.ContainsKey("ErrorMessage") == true ? dic["ErrorMessage"].cpToString() : "")}";
 
                 response.statu = SaleResponseStatu.Error;
                 response.message = errorMsg;
@@ -150,12 +179,14 @@ namespace CP.VPOS.Banks.Denizbank
                 response.orderNumber = request.responseArray["OrderId"].cpToString();
 
 
-            if (request?.responseArray?.ContainsKey("ProcReturnCode") == true && request.responseArray["ProcReturnCode"].cpToString() == "00")
+            if (request?.responseArray?.ContainsKey("ProcReturnCode") == true &&
+                request.responseArray["ProcReturnCode"].cpToString() == "00")
             {
                 response.statu = SaleResponseStatu.Success;
                 response.message = "İşlem başarılı";
             }
-            else if (request?.responseArray?.ContainsKey("ErrorMessage") == true && request.responseArray["ErrorMessage"].cpToString() != "")
+            else if (request?.responseArray?.ContainsKey("ErrorMessage") == true &&
+                     request.responseArray["ErrorMessage"].cpToString() != "")
             {
                 response.statu = SaleResponseStatu.Error;
                 response.message = request.responseArray["ErrorMessage"].cpToString();
@@ -174,14 +205,15 @@ namespace CP.VPOS.Banks.Denizbank
         {
             CancelResponse response = new CancelResponse { statu = ResponseStatu.Error };
 
-            Dictionary<string, string> req = new Dictionary<string, string> {
-                {"ShopCode", auth.merchantID },
-                {"UserCode", auth.merchantUser },
-                {"UserPass", auth.merchantPassword },
-                {"orgOrderId", request.orderNumber },
-                {"TxnType", "Void" },
-                {"SecureType", "NonSecure" },
-                {"Lang", "TR"},
+            Dictionary<string, string> req = new Dictionary<string, string>
+            {
+                { "ShopCode", auth.merchantID },
+                { "UserCode", auth.merchantUser },
+                { "UserPass", auth.merchantPassword },
+                { "orgOrderId", request.orderNumber },
+                { "TxnType", "Void" },
+                { "SecureType", "NonSecure" },
+                { "Lang", "TR" },
             };
 
             string res = this.Request(req, auth);
@@ -224,16 +256,21 @@ namespace CP.VPOS.Banks.Denizbank
         {
             RefundResponse response = new RefundResponse { statu = ResponseStatu.Error };
 
-            Dictionary<string, string> req = new Dictionary<string, string> {
-                {"ShopCode", auth.merchantID },
-                {"UserCode", auth.merchantUser },
-                {"UserPass", auth.merchantPassword },
-                {"PurchAmount", request.refundAmount.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")).Replace(".", "").Replace(",", ".") },
-                {"Currency", ((int)request.currency).ToString() },
-                {"orgOrderId", request.orderNumber },
-                {"TxnType", "Refund" },
-                {"SecureType", "NonSecure" },
-                {"Lang", "TR"},
+            Dictionary<string, string> req = new Dictionary<string, string>
+            {
+                { "ShopCode", auth.merchantID },
+                { "UserCode", auth.merchantUser },
+                { "UserPass", auth.merchantPassword },
+                {
+                    "PurchAmount",
+                    request.refundAmount.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")).Replace(".", "")
+                        .Replace(",", ".")
+                },
+                { "Currency", ((int)request.currency).ToString() },
+                { "orgOrderId", request.orderNumber },
+                { "TxnType", "Refund" },
+                { "SecureType", "NonSecure" },
+                { "Lang", "TR" },
             };
 
             string res = this.Request(req, auth);
@@ -273,7 +310,8 @@ namespace CP.VPOS.Banks.Denizbank
             return response;
         }
 
-        public AdditionalInstallmentQueryResponse AdditionalInstallmentQuery(AdditionalInstallmentQueryRequest request, VirtualPOSAuth auth)
+        public AdditionalInstallmentQueryResponse AdditionalInstallmentQuery(AdditionalInstallmentQueryRequest request,
+            VirtualPOSAuth auth)
         {
             return null;
         }
@@ -311,7 +349,9 @@ namespace CP.VPOS.Banks.Denizbank
             using (HttpClient client = new HttpClient())
             using (var req = new FormUrlEncodedContent(param))
             {
-                req.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded") { CharSet = Encoding.UTF8.WebName };
+                req.Headers.ContentType =
+                    new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded")
+                        { CharSet = Encoding.UTF8.WebName };
                 var response = client.PostAsync(link ?? (auth.testPlatform ? _urlAPITest : _urlAPILive), req).Result;
                 byte[] responseByte = response.Content.ReadAsByteArrayAsync().Result;
                 responseString = Encoding.UTF8.GetString(responseByte);
