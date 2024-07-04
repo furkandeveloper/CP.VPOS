@@ -2,14 +2,14 @@
 
 	<PropertyGroup>
 		<TargetFramework Condition="'$(LibraryFrameworks)'==''">netstandard2.0</TargetFramework>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<Authors>furkandeveloper</Authors>
 		<Company>furkandeveloper</Company>
 		<Description>Sanal POS</Description>
 		<PackageProjectUrl>https://github.com/furkandeveloper/CP.VPOS</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/eloper/CP.VPOS</RepositoryUrl>
-		<AssemblyVersion>1.7.0</AssemblyVersion>
-		<FileVersion>1.7.0</FileVersion>
+		<AssemblyVersion>1.4.0</AssemblyVersion>
+		<FileVersion>1.4.0</FileVersion>
 		<PackageIcon>packageIcon.png</PackageIcon>
 		<PackageReleaseNotes>QNBpay entegrasyonu eklendi.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
